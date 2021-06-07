@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="从零开始的CTFer成长之路 - Web篇, 隐隐">
+    <meta name="keywords" content="SQL注入攻击 SQL injection attack, 隐隐">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>从零开始的CTFer成长之路 - Web篇 | 隐隐</title>
+    <title>SQL注入攻击 SQL injection attack | 隐隐</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -70,17 +70,6 @@
       <i class="fa-fw fas fa-align-left" style="zoom: 0.6;"></i>
       
       <span>Others</span>
-    </a>
-    
-  </li>
-  
-  <li class="hide-on-med-and-down nav-item">
-    
-    <a href="/categories/CTF" class="waves-effect waves-light">
-      
-      <i class="fa-fw fas fa-flag" style="zoom: 0.6;"></i>
-      
-      <span>CTF</span>
     </a>
     
   </li>
@@ -157,17 +146,6 @@
         
         <li class="m-nav-item">
 	  
-		<a href="/categories/CTF" class="waves-effect waves-light">
-			
-			    <i class="fa-fw fa-fw fas fa-flag"></i>
-			
-			CTF
-		</a>
-          
-        </li>
-        
-        <li class="m-nav-item">
-	  
 		<a href="/friends" class="waves-effect waves-light">
 			
 			    <i class="fa-fw fas fa-address-book"></i>
@@ -201,6 +179,19 @@
 </header>
 
     
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
 
 <!--  -->
 
@@ -212,7 +203,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">从零开始的CTFer成长之路 - Web篇</h1>
+                    <h1 class="description center-align post-title">SQL注入攻击 SQL injection attack</h1>
                 </div>
             </div>
         </div>
@@ -332,6 +323,10 @@
                                 <span class="chip bg-color">Web</span>
                             </a>
                         
+                            <a href="/tags/SQL-Injection/">
+                                <span class="chip bg-color">SQL Injection</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -340,8 +335,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/CTF/" class="post-category">
-                                CTF
+                            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-category">
+                                学习记录
                             </a>
                         
                     </div>
@@ -353,7 +348,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-04
+                    2021-06-07
                 </div>
                 
 
@@ -362,7 +357,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    204
                 </div>
                 
 
@@ -384,6 +379,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
         <!-- 代码块折行 -->
@@ -394,7 +392,30 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <p><img src="https://gitee.com/night7i/img/raw/master/img/sqlinjectioncover.png"></p>
+<h4 id="什么是SQL注入？"><a href="#什么是SQL注入？" class="headerlink" title="什么是SQL注入？"></a>什么是SQL注入？</h4><p>SQL注入作为网络世界中最常见的攻击手段，想必大家多少有听过某某学长某某同学，修改了学校的数据库，修改了自己的成绩，修改了自己的饭卡权限…等等，在最常见Web攻击手段里，SQL注入首当其冲。</p>
+<br>
+
+<p>简单的来说，SQL注入是恶意用户通过篡改SQL查询语句，以通过非正常手段获取到自己需要的数据的一种方式。</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/SQL%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86.png"></p>
+<p>在学习注入攻击之前你应该先有以下储备知识：</p>
+<ul>
+<li><p>PHP基础</p>
+</li>
+<li><p>PHP连接数据库</p>
+</li>
+<li><p>SQL语句基础</p>
+</li>
+</ul>
+<h4 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h4><p>在本篇中所使用的环境为PHP + MySQL 也是中小型网站最常见的架构结构</p>
+<p>所需工具：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://m.xp.cn/">phpstudy</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/Audi-1/sqli-labs">sqli-labs</a></p>
+</li>
+</ul>
+
                 
             </div>
             <hr/>
@@ -420,7 +441,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2021/06/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84CTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-Web%E7%AF%87-1/">http://example.com/2021/06/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84CTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-Web%E7%AF%87-1/</a>
+                    <a href="http://ayysec.com/2021/06/07/SQL%E6%B3%A8%E5%85%A5-SQL-injection-attack/">http://ayysec.com/2021/06/07/SQL%E6%B3%A8%E5%85%A5-SQL-injection-attack/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -460,6 +481,10 @@
                             
                                 <a href="/tags/Web/">
                                     <span class="chip bg-color">Web</span>
+                                </a>
+                            
+                                <a href="/tags/SQL-Injection/">
+                                    <span class="chip bg-color">SQL Injection</span>
                                 </a>
                             
                         </div>
@@ -508,12 +533,12 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2021/06/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84CTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-Web%E7%AF%87-1/">
+                <a href="/2021/06/07/SQL%E6%B3%A8%E5%85%A5-SQL-injection-attack/">
                     <div class="card-image">
                         
-                        <img src="https://gitee.com/night7i/img/raw/master/img/20210604202738.png" class="responsive-img" alt="从零开始的CTFer成长之路 - Web篇">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/sqlinjectioncover.png" class="responsive-img" alt="SQL注入攻击 SQL injection attack">
                         
-                        <span class="card-title">从零开始的CTFer成长之路 - Web篇</span>
+                        <span class="card-title">SQL注入攻击 SQL injection attack</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -524,14 +549,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-07
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/CTF/" class="post-category">
-                                    CTF
+                            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-category">
+                                    学习记录
                                 </a>
                             
                             
@@ -546,6 +571,10 @@
                         <span class="chip bg-color">Web</span>
                     </a>
                     
+                    <a href="/tags/SQL-Injection/">
+                        <span class="chip bg-color">SQL Injection</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -557,7 +586,7 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/06/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84CTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-Web%E7%AF%87/">
+                <a href="/2021/06/04/%E5%85%B3%E4%BA%8E%E9%9A%90%E9%9A%90%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%A4%A7%E7%BA%B2/">
                     <div class="card-image">
                         
                         <img src="https://gitee.com/night7i/img/raw/master/img/Snipaste_2021-06-07_10-50-43.jpg" class="responsive-img" alt="隐隐的学习大纲">
@@ -727,60 +756,6 @@
 
     <footer class="page-footer bg-color">
     
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
-<style>
-    .aplayer .aplayer-lrc p {
-        
-        display: none;
-        
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 16px !important;
-    }
-
-    .aplayer .aplayer-lrc p.aplayer-lrc-current {
-        
-        display: none;
-        
-        font-size: 15px;
-        color: #42b983;
-    }
-
-    
-    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
-        left: -66px !important;
-    }
-
-    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
-        left: 0px !important;
-    }
-
-    
-</style>
-<div class="">
-    
-    <div class="row">
-        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
-                   server="netease"
-                   type="playlist"
-                   id="503838841"
-                   fixed='true'
-                   autoplay='false'
-                   theme='#42b983'
-                   loop='all'
-                   order='random'
-                   preload='auto'
-                   volume='0.7'
-                   list-folded='true'
-        >
-        </meting-js>
-    </div>
-</div>
-
-<script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-
-    
     <div class="container row center-align" style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
@@ -794,7 +769,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">223</span>&nbsp;字
+                class="white-color">442</span>&nbsp;字
             
             
             
