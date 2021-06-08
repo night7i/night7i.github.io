@@ -357,7 +357,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    216
+                    338
                 </div>
                 
 
@@ -402,9 +402,10 @@
 <h4 id="查看表名"><a href="#查看表名" class="headerlink" title="查看表名"></a>查看表名</h4><p><code>TABLES</code>表内T<code>TABLE_NAME</code>字段储存了所有表的名称 输入语句查询某一数据库下的所有表</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA&#x3D;&#39;表名&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h4 id="查看表下所有的列"><a href="#查看表下所有的列" class="headerlink" title="查看表下所有的列"></a>查看表下所有的列</h4><p>COLUMN</p>
-<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql"><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="查看表下所有的列"><a href="#查看表下所有的列" class="headerlink" title="查看表下所有的列"></a>查看表下所有的列</h4><p><code>COLUMN</code>S表内<code>COLUMN_NAME</code>字段储存了所有的字段名称 输入语句查询某表下所有字段</p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA&#x3D;database() and TABLE_NAME&#x3D;&#39;表名&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
+<p>利用联合查询以及information_schema即可获取到数据库内的信息，如果页面有回显值，在页面的sql语句后跟联合查询即可直接查询数据，如果没有回显值，或者属于<code>报错型注入</code>则需要通过<code>盲猜</code>获取数据</p>
 
                 
             </div>
@@ -763,7 +764,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.1k</span>&nbsp;字
+                class="white-color">1.3k</span>&nbsp;字
             
             
             
