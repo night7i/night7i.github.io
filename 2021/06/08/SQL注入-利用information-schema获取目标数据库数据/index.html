@@ -65,6 +65,17 @@
   
   <li class="hide-on-med-and-down nav-item">
     
+    <a href="/categories/Web" class="waves-effect waves-light">
+      
+      <i class="fab fa-internet-explorer" style="zoom: 0.6;"></i>
+      
+      <span>Web</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
     <a href="/categories/Others" class="waves-effect waves-light">
       
       <i class="fa-fw fas fa-align-left" style="zoom: 0.6;"></i>
@@ -129,6 +140,17 @@
 			    <i class="fa-fw fas fa-home"></i>
 			
 			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/Web" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fab fa-internet-explorer"></i>
+			
+			Web
 		</a>
           
         </li>
@@ -319,10 +341,6 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Web/">
-                                <span class="chip bg-color">Web</span>
-                            </a>
-                        
                             <a href="/tags/SQL-Injection/">
                                 <span class="chip bg-color">SQL Injection</span>
                             </a>
@@ -335,8 +353,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-category">
-                                学习记录
+                            <a href="/categories/Web/" class="post-category">
+                                Web
                             </a>
                         
                     </div>
@@ -399,10 +417,10 @@
 <p><code>schemata</code>表内<code>SCHEMA_NAME</code>字段内储存了所有的数据库名 输入语句查看所有库</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; select group_concat(SCHEMA_NAME) from information_schema.SCHEMATA;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h4 id="查看表名"><a href="#查看表名" class="headerlink" title="查看表名"></a>查看表名</h4><p><code>TABLES</code>表内T<code>TABLE_NAME</code>字段储存了所有表的名称 输入语句查询某一数据库下的所有表</p>
+<h4 id="查看表名"><a href="#查看表名" class="headerlink" title="查看表名"></a>查看表名</h4><p><code>TABLES</code>表内<code>TABLE_NAME</code>字段储存了所有表的名称 输入语句查询某一数据库下的所有表</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA&#x3D;&#39;表名&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h4 id="查看表下所有的列"><a href="#查看表下所有的列" class="headerlink" title="查看表下所有的列"></a>查看表下所有的列</h4><p><code>COLUMN</code>S表内<code>COLUMN_NAME</code>字段储存了所有的字段名称 输入语句查询某表下所有字段</p>
+<h4 id="查看表下所有的列"><a href="#查看表下所有的列" class="headerlink" title="查看表下所有的列"></a>查看表下所有的列</h4><p><code>COLUMNS</code>表内<code>COLUMN_NAME</code>字段储存了所有的字段名称 输入语句查询某表下所有字段</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA&#x3D;database() and TABLE_NAME&#x3D;&#39;表名&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>利用联合查询以及information_schema即可获取到数据库内的信息，如果页面有回显值，在页面的sql语句后跟联合查询即可直接查询数据，如果没有回显值，或者属于<code>报错型注入</code>则需要通过<code>盲猜</code>获取数据</p>
@@ -469,10 +487,6 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/Web/">
-                                    <span class="chip bg-color">Web</span>
-                                </a>
                             
                                 <a href="/tags/SQL-Injection/">
                                     <span class="chip bg-color">SQL Injection</span>
@@ -546,8 +560,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="post-category">
-                                    学习记录
+                            <a href="/categories/Web/" class="post-category">
+                                    Web
                                 </a>
                             
                             
@@ -557,10 +571,6 @@
 
                 
                 <div class="card-action article-tags">
-                    
-                    <a href="/tags/Web/">
-                        <span class="chip bg-color">Web</span>
-                    </a>
                     
                     <a href="/tags/SQL-Injection/">
                         <span class="chip bg-color">SQL Injection</span>
@@ -599,8 +609,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%BD%92%E7%BA%B3%E6%80%BB%E7%BB%93/" class="post-category">
-                                    归纳总结
+                            <a href="/categories/Web/" class="post-category">
+                                    Web
                                 </a>
                             
                             
@@ -609,10 +619,6 @@
                 </div>
                 
                 <div class="card-action article-tags">
-                    
-                    <a href="/tags/Web/">
-                        <span class="chip bg-color">Web</span>
-                    </a>
                     
                     <a href="/tags/SQL-Injection/">
                         <span class="chip bg-color">SQL Injection</span>
@@ -764,7 +770,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.3k</span>&nbsp;字
+                class="white-color">1.7k</span>&nbsp;字
             
             
             
