@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SQL注入 双查询注入, 隐隐">
+    <meta name="keywords" content="从0到1：CTFer成长之路, 隐隐">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>SQL注入 双查询注入 | 隐隐</title>
+    <title>从0到1：CTFer成长之路 | 隐隐</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -247,7 +247,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SQL注入 双查询注入</h1>
+                    <h1 class="description center-align post-title">从0到1：CTFer成长之路</h1>
                 </div>
             </div>
         </div>
@@ -363,23 +363,14 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/SQL-Injection/">
-                                <span class="chip bg-color">SQL Injection</span>
+                            <a href="/tags/CTF/">
+                                <span class="chip bg-color">CTF</span>
                             </a>
                         
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/Web/" class="post-category">
-                                Web
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -388,7 +379,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-09
+                    2021-06-24
                 </div>
                 
 
@@ -397,14 +388,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    615
+                    549
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    1 分
                 </div>
                 
 
@@ -432,55 +423,11 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h4 id="1、预备知识"><a href="#1、预备知识" class="headerlink" title="1、预备知识"></a>1、预备知识</h4><p>在学习双查询注入前我们需要学习SQL语句的子查询，何为子查询？<br><br></p>
-<p>查询的关键字是select，子查询可以简单的理解为在select语句里还有一个select，里面的这个select语句就是子查询。</p>
-<pre class="line-numbers language-none"><code class="language-none">select concat((select database()));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>执行这条语句的时候，会先从子查询先开始，因此执行select database()的时候，这个语句就会把当前数据库查出来，然后传入concat函数，concat是用来连接的，比如传入(‘a’,’b’,’c’)那传入concat的值就是abc</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609095755.png"></p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609095709.png"></p>
-<p>双注入查询需要四个函数/语句</p>
-<ul>
-<li>1、Rand()        //随机函数 - 生成随机小数</li>
-</ul>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105424.png"></p>
-<ul>
-<li>2、Floor()        //取整函数</li>
-</ul>
-<p>![](<a target="_blank" rel="noopener" href="https://gitee.com/night7i/img/raw/master/img/20210609105442.png">https://gitee.com/night7i/img/raw/master/img/20210609105442.png</a></p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105458.png"></p>
-<ul>
-<li>3、count()        //汇总函数</li>
-</ul>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105616.png"></p>
-<ul>
-<li>4、group by    //分组语句</li>
-</ul>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609105821.png"></p>
-<p><code>select username as a from users group by a;</code>其中<code>as a</code>可以理解为命名，也就是给列重命名为a。</p>
-<h4 id="2、原理"><a href="#2、原理" class="headerlink" title="2、原理"></a>2、原理</h4><p>在执行group by name语句的时候，语句对引用的字段进行索引，生成了一个<strong>虚拟表</strong>表中有名称为group_key的主键</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609131706.png"></p>
-<p>我们使用count函数查看虚拟表是否存在主键，如果不存在则插入新纪录</p>
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609131731.png"></p>
-<p>当我们的查询语句中包含了rand()函数时，group by在处理时，对rand()函数进行了多次处理，所以造成了双查询报错信息。</p>
-<pre class="line-numbers language-none"><code class="language-none">select count(*),concat((select database()),floor(rand()*2)) as a from users group by a;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p><img src="https://gitee.com/night7i/img/raw/master/img/20210609132013.png"></p>
-<p>可以看到执行语句会返回两种结果：</p>
-<ul>
-<li>1、在传入group by新建虚拟表时，select database()+随机数生成的0或1 也就是<code>security0&amp;security1</code>的查询结果与group by主键冲突，便产生报错。</li>
-<li>2、select的查询结果与group by生成虚拟表的主键不冲突，则不会报错，输出正常查询结果。</li>
-</ul>
-<h4 id="3、语句总结"><a href="#3、语句总结" class="headerlink" title="3、语句总结"></a>3、语句总结</h4><p>爆库：<code>select 1,count(*),concat((select group_concat(schema_name) from information_schema.schemata),floor(rand()*2)) as a from information_schema.TABLES group by a --+</code></p>
-<p>爆表：<code>select count(*),1, concat((select group_concat(table_name) from information_schema.tables where table_schema=&#39;库名&#39;),floor(rand()*2)) as a from information_schema.tables group by a</code></p>
-<p>爆字段：<code>select count(*),1, concat((select password from users LIMIT 0,1),floor(rand()*2)) as a from information_schema.tables group by a</code></p>
-<p>其中LIMIT x,1    x为显示的第x个用户</p>
-<p>参考连接：</p>
-<p>如果对文章某些内容存在疑问或者看不懂的可以参考以下链接</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/369433047">https://zhuanlan.zhihu.com/p/369433047</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/laoxiajiadeyun/p/10283251.html#_caption2">https://www.cnblogs.com/laoxiajiadeyun/p/10283251.html#_caption2</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42128270/article/details/113908014">https://blog.csdn.net/weixin_42128270/article/details/113908014</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.2cto.com/article/201303/192718.html">https://www.2cto.com/article/201303/192718.html</a></p>
+                <p><img src="https://gitee.com/night7i/img/raw/master/img/20210624200725.png" alt="image-20210624200725322"></p>
+<h2 id="第一章Web入门"><a href="#第一章Web入门" class="headerlink" title="第一章Web入门"></a>第一章Web入门</h2><p>在传统的CTF线上比赛中，Web类题目是主要的题型之一，相较于二进制、逆向等类型的题目，参赛者不需掌握系统底层知识；相较于密码学、杂项问题，不需具特别强的编程能力，故入门较为容易。<br>Web类题目常见的漏洞类型包括注入、XSS、文件包含、代码执行、上传、SSRF等。</p>
+<p>本章将分别介绍CTF线上比赛中常见的各种Web漏洞，通过相关例题解析，尽可能让读者对CTF线上比赛的Web类题目有相对全面的了解。但是Web漏洞的分类十分复杂，希望读者在阅读本书的同时在互联网上了解相关知识，这样才可以达到举一反三的目的，以便提升自身能力。</p>
+<p>按照漏洞出现的频率、漏洞的复杂程度，我们将Web类题目分为入门、进阶、拓展三个层次进行介绍。讲解每个层次的漏洞时，我们辅以相关例题解析，让读者更直观地了解CTF线上比赛中Web类题目不同漏洞带来的影响，由浅入深地了解Web类题目，清楚自身技能的不足，从而达到弥补的目的。本章从“入门”层次开始，介绍Web类题目中最常见的3类漏洞，即信息搜集、SQL注入、任意文件读取漏洞。</p>
+<h3 id="1-1举足轻重的信息搜集"><a href="#1-1举足轻重的信息搜集" class="headerlink" title="1.1举足轻重的信息搜集"></a>1.1举足轻重的信息搜集</h3><h4 id="1-1-1信息搜集的重要性"><a href="#1-1-1信息搜集的重要性" class="headerlink" title="1.1.1信息搜集的重要性"></a>1.1.1信息搜集的重要性</h4><p>古人云“知己知彼，百战不殆”，在现实世界和比赛中，信息搜集是前期的必备工作，也是重中之重。在CTF线上比赛的Web类题目中，信息搜集涵盖的面非常广，<strong>有备份文件、目录信息、Banner信息等</strong>，这就需要参赛者有丰富的经验，或者利用一些脚本来帮助自己发现题目信息、挖掘题目漏洞。<br>本节会尽可能叙述在CTF线上比赛中Web类题目包含的信息搜集，也会推荐一些作者测试无误的开源工具软件。</p>
 
                 
             </div>
@@ -507,7 +454,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://ayysec.com/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/">http://ayysec.com/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/</a>
+                    <a href="http://ayysec.com/2021/06/24/%E4%BB%8E0%E5%88%B01%EF%BC%9ACTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-1/">http://ayysec.com/2021/06/24/%E4%BB%8E0%E5%88%B01%EF%BC%9ACTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -545,8 +492,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/SQL-Injection/">
-                                    <span class="chip bg-color">SQL Injection</span>
+                                <a href="/tags/CTF/">
+                                    <span class="chip bg-color">CTF</span>
                                 </a>
                             
                         </div>
@@ -640,12 +587,12 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/06/24/%E4%BB%8E0%E5%88%B01%EF%BC%9ACTFer%E6%88%90%E9%95%BF%E4%B9%8B%E8%B7%AF-1/">
+                <a href="/2021/06/24/%E8%B7%AF%E7%94%B1%E4%B8%8E%E4%BA%A4%E6%8D%A2%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/">
                     <div class="card-image">
                         
-                        <img src="https://gitee.com/night7i/img/raw/master/img/20210624200725.png" class="responsive-img" alt="从0到1：CTFer成长之路">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/20210624200442.png" class="responsive-img" alt="路由与交换期末复习">
                         
-                        <span class="card-title">从0到1：CTFer成长之路</span>
+                        <span class="card-title">路由与交换期末复习</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -669,8 +616,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/CTF/">
-                        <span class="chip bg-color">CTF</span>
+                    <a href="/tags/Cisco/">
+                        <span class="chip bg-color">Cisco</span>
                     </a>
                     
                 </div>
@@ -684,12 +631,12 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/06/08/SQL%E6%B3%A8%E5%85%A5-%E5%88%A9%E7%94%A8information-schema%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE/">
+                <a href="/2021/06/09/SQL%E6%B3%A8%E5%85%A5-%E5%8F%8C%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5/">
                     <div class="card-image">
                         
-                        <img src="https://gitee.com/night7i/img/raw/master/img/20210608100438.png" class="responsive-img" alt="SQL注入 利用information_schema获取目标数据库数据">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/20210609094924.jpg" class="responsive-img" alt="SQL注入 双查询注入">
                         
-                        <span class="card-title">SQL注入 利用information_schema获取目标数据库数据</span>
+                        <span class="card-title">SQL注入 双查询注入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -700,7 +647,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-09
                             </span>
                         <span class="publish-author">
                             
