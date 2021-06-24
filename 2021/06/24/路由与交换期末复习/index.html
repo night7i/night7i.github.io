@@ -388,14 +388,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    452
+                    602
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -430,25 +430,33 @@
 cisco(config)#<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>2-禁用DNS查找</p>
-<pre class="line-numbers language-none"><code class="language-none">cisco(config)#no ip domain-lookup<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">cisco(config)#no ip domain-lookup			&#x2F;&#x2F; 禁止DNS查找<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>3-接口地址-掩码-启用接口-双工-速度</p>
 <pre class="line-numbers language-none"><code class="language-none">cisco(config)#int F0&#x2F;1
 cisco(config-if)#no switchport
-cisco(config-if)#ip address 10.0.0.254 255.255.255.252      &#x2F;&#x2F;配置接口地址
-cisco(config-if)#speed 10                                   &#x2F;&#x2F;设置端口速率为10MB&#x2F;s
-cisco(config-if)#duplex full                                &#x2F;&#x2F;设置该端口为全双工<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+cisco(config-if)#ip address 10.0.0.254 255.255.255.252      &#x2F;&#x2F; 配置接口地址
+cisco(config-if)#speed 10                                   &#x2F;&#x2F; 设置端口速率为10MB&#x2F;s
+cisco(config-if)#duplex full                                &#x2F;&#x2F; 设置该端口为全双工<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>4-时钟配置      //设置DCE串时使用</p>
 <pre class="line-numbers language-none"><code class="language-none">Router(config)#int s2&#x2F;0
 Router(config-if)#clock rate 64000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>5-端口安全性</p>
-<pre class="line-numbers language-none"><code class="language-none"><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-
+<pre class="line-numbers language-none"><code class="language-none">cisco(config-if)#switchport mode access 							&#x2F;&#x2F; 设置端口为交换模式
+cisco(config-if)#switchport port-security							&#x2F;&#x2F; 打开端口安全模式<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>6-静态MAC地址绑定</p>
+<pre class="line-numbers language-none"><code class="language-none">sw1(config-if)#switchport port-security mac-address sticky		&#x2F;&#x2F;设置端口为静态MAC地址绑定
+sw1(config-if)#switchport port-security maximum 3				&#x2F;&#x2F;设置最大安全地址个数为3
+sw1(config-if)#switchport port-security violation shutdown		&#x2F;&#x2F;关闭非法端口连接
+
+switchport port-security violation protect|restrict|shutdown
+&#x2F;&#x2F; 针对非法接入计算机，端口处理模式&#123;丢弃数据包，不发警告|丢弃数据包，在console发警告|关闭&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
 <h4 id="3-密码和会话配置"><a href="#3-密码和会话配置" class="headerlink" title="3.密码和会话配置"></a>3.密码和会话配置</h4><p>​    1-密码配置：特权-控制台-虚拟终端线路<br>​    2-密码加密服务，线路会话超时-历史记录-线路密码应用<br>​    3-MOTD 和 端口描述</p>
 <h4 id="4-交换机配置"><a href="#4-交换机配置" class="headerlink" title="4.交换机配置"></a>4.交换机配置</h4><p>​    1-VLAN的创建-删除-命名-端口划分<br>​    2-配置接入 或 中继模式，允许指定VLAN<br>​    3-配置VTP模式-域名-VTP密码<br>​    4-启用三层路由功能-交换机三层端口配置-VLAN间路由。</p>
 <h4 id="5-路由协议和重分布"><a href="#5-路由协议和重分布" class="headerlink" title="5.路由协议和重分布"></a>5.路由协议和重分布</h4><p>​    1-默认路由，出接口 或 下一跳地址<br>​    2-OSPF-进程ID-区域ID-RouterID-区域认证<br>​       RIP v2，启用或禁用自动汇总<br>​       路由重分布：OSPF-RIP-静态-默认路由<br>​       被动接口。<br>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
@@ -837,7 +845,7 @@ Router(config-if)#clock rate 64000<span aria-hidden="true" class="line-numbers-r
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3.7k</span>&nbsp;字
+                class="white-color">3.9k</span>&nbsp;字
             
             
             
