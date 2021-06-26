@@ -366,14 +366,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.4k
+                    2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    9 分
                 </div>
                 
 
@@ -414,10 +414,11 @@ cisco(config)#<span aria-hidden="true" class="line-numbers-rows"><span></span><s
 <pre class="line-numbers language-none"><code class="language-none">cisco(config)#int F0&#x2F;1
 cisco(config-if)#no switchport
 cisco(config-if)#ip address 10.0.0.254 255.255.255.252      &#x2F;&#x2F; 配置接口地址
-cisco(config-if)#speed 10                                   &#x2F;&#x2F; 设置端口速率为10MB&#x2F;s
-cisco(config-if)#duplex full                                &#x2F;&#x2F; 设置该端口为全双工<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+cisco(config-if)#no shutdown								&#x2F;&#x2F; 启用接口
+cisco(config-if)#duplex full                                &#x2F;&#x2F; 设置该端口为全双工
+cisco(config-if)#speed 10                                   &#x2F;&#x2F; 设置端口速率为10MB&#x2F;s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>4-时钟配置      //设置DCE串时使用</p>
+<p>4-时钟配置      （设置DCE串口时使用）</p>
 <pre class="line-numbers language-none"><code class="language-none">Router(config)#int s2&#x2F;0
 Router(config-if)#clock rate 64000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
@@ -435,19 +436,53 @@ switchport port-security violation protect|restrict|shutdown
 
 
 
-<h4 id="3-密码和会话配置"><a href="#3-密码和会话配置" class="headerlink" title="3.密码和会话配置"></a>3.密码和会话配置</h4><p>​    1-密码配置：特权-控制台-虚拟终端线路<br>​    2-密码加密服务，线路会话超时-历史记录-线路密码应用<br>​    3-MOTD 和 端口描述</p>
+<h4 id="3-密码和会话配置"><a href="#3-密码和会话配置" class="headerlink" title="3.密码和会话配置"></a>3.密码和会话配置</h4><p>​    1-密码配置：特权-控制台-虚拟终端线路</p>
+<p>​    配置<strong>特权（执行）</strong>模式密码：</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#enable password pswd		&#x2F;&#x2F; 设置密码为pswd
+Router(config)#enable secret pswd 		&#x2F;&#x2F; 同理 2个同时设 只有secret有效，因为其优先极高<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>​    配置<strong>console（控制台）</strong>密码：</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line console 0
+SW1(config-line)#password pswd
+SW1(config-line)#login &#x2F;&#x2F;启用密码认证，默认没有，需要加上去
+SW1(config-line)#login local &#x2F;&#x2F;本地开启用户认证
+SW1(config)username usname password pswd &#x2F;&#x2F;创建本地用户
+SW1(config)username usname privilege 15 password pswd &#x2F;&#x2F;以该用户登入设备后直接进入特权模式
+说明---对用户的权限定义0-15级，最高为15，任何命令都可操作<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    <strong>vty（虚拟终端路线）</strong>连接口令：</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line vty 0 4
+SW1(config-line)#password telnetcisco
+SW1(config-line)#login &#x2F;&#x2F;默认就有
+SW1(config-line)#login local &#x2F;&#x2F;开启本地用户认证，使用本地用户数据库
+SW1(config-line)no login &#x2F;&#x2F;不需要密码就可登陆<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    2-密码加密服务，线路会话超时-历史记录-线路密码应用</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line console 0
+SW1(config)service password-encryption &#x2F;&#x2F;明文密码加密 密码加密
+
+Router(config)#line vty 0 4
+Router(config-line)#exec-timeout 5 0	&#x2F;&#x2F; 设置5分0秒会话超时<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    3-MOTD 和 端口描述</p>
+<p><strong>MOTD</strong> 当日信息标语</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#banner motd &quot;当日信息标语&quot;		&#x2F;&#x2F; motd 当日信息标语<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><strong>设置端口描述：</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#int f0&#x2F;0
+Router(config-if)#description LINK-SW1		&#x2F;&#x2F; 端口描述设置为 LINK-SW1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
 <h4 id="4-交换机配置"><a href="#4-交换机配置" class="headerlink" title="4.交换机配置"></a>4.交换机配置</h4><p><img src="https://gitee.com/night7i/img/raw/master/img/20210626181825.png" alt="Untitled"></p>
 <p>​    1-VLAN的创建-删除-命名-端口划分<br>​    2-配置接入 或 中继模式，允许指定VLAN<br>​    3-配置VTP模式-域名-VTP密码</p>
 <pre class="line-numbers language-none"><code class="language-none">教学楼三层交换机：
-SW1(vlan)#vtp domain vtp-name	&#x2F;&#x2F; 创建VTP域
 SW1(config)#vtp mode server		&#x2F;&#x2F; 设置VTP模式为server（服务端）
-SW1(vlan)#vtp password password	&#x2F;&#x2F; 设置VTP口令为password
+SW1(config)#vtp domain vtp-name	&#x2F;&#x2F; 创建VTP域 域名为vtp-name
+SW1(config)#vtp password password	&#x2F;&#x2F; 设置VTP口令为password
 
 二层交换机 教学区&amp;实验区：
-SW2&amp;3(config)#int f0&#x2F;24
-SW2&amp;3(config-if)#switchport mode trunk			&#x2F;&#x2F; 配置与交换机连接的口为trunk
 SW2&amp;3(config)#vtp mode client					&#x2F;&#x2F; 设置VTP模式为Client（连接端）
-SW2&amp;3(vlan)#vtp password password	&#x2F;&#x2F; 设置VTP口令为password<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+SW2&amp;3(config)#vtp domain vtp-name				&#x2F;&#x2F; 创建VTP域 域名为vtp-name
+SW2&amp;3(config)#vtp password password				&#x2F;&#x2F; 设置VTP口令为password<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>​    4-启用三层路由功能-交换机三层端口配置-VLAN间路由。</p>
 <pre class="line-numbers language-none"><code class="language-none">SW1(config)#ip routing				&#x2F;&#x2F; 开启三层路由
@@ -469,56 +504,86 @@ Router(config-router)#version 2
 Router(config-router)#network 192.168.1.0		&#x2F;&#x2F; 添加直连的网段
 Router(config-router)#network 192.168.2.0
 Router(config-router)#no auto-summary			&#x2F;&#x2F; 禁用自动汇总
-SW2:
-Router(config)#router rip 
-Router(config-router)#version 2
-Router(config-router)#network 192.168.2.0		&#x2F;&#x2F; 添加直连的网段
-Router(config-router)#network 192.168.3.0
-Router(config-router)#no auto-summary			&#x2F;&#x2F; 禁用自动汇总
+Router(config-router)#redistribute static		&#x2F;&#x2F; 路由重分布
 
 动态路由ospf:
-SW1:
-Router(config)#router ospf 1							&#x2F;&#x2F; 设置ospf路由 进程为1
+Router(config)#router ospf 1							&#x2F;&#x2F; 设置 ospf路由 进程为1
+Router(config-router)#router-id 1.1.1.1					&#x2F;&#x2F; 设置 router-id为1.1.1.1
+Router(config-router)#area 0 authentication message-digest	&#x2F;&#x2F; 添加 ospf区域认证
 Router(config-router)#network 192.168.1.0 0.0.0.255 area 0	&#x2F;&#x2F; 添加直连网段并指定区域为 0
 Router(config-router)#network 192.168.2.0 0.0.0.255 area 0
-SW2:
-Router(config)#router ospf 1							&#x2F;&#x2F; 设置ospf路由 进程为1
-Router(config-router)#network 192.168.2.0 0.0.0.255 area 0	&#x2F;&#x2F; 添加直连网段并指定区域为 0
-Router(config-router)#network 192.168.3.0 0.0.0.255 area 0
 
 配置默认路由：
 SW1:
 Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.2
 SW2:
-Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
-<h4 id="6-访问控制列表的应用"><a href="#6-访问控制列表的应用" class="headerlink" title="6.访问控制列表的应用"></a>6.访问控制列表的应用</h4><p>​    1-定义标准ACL阻止特定流量，并应用到接口上<br>​    2-定义扩展ACL阻止特定流量，并应用到接口上<br>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
-<h4 id="7-附加知识点"><a href="#7-附加知识点" class="headerlink" title="7.附加知识点"></a>7.附加知识点</h4><p>配置<strong>当日消息</strong>标语：</p>
-<pre class="line-numbers language-none"><code class="language-none">Router(config)#banner motd &quot;当日信息标语&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>OSPF认证（需进入端口设置）：</p>
+<pre class="line-numbers language-none"><code class="language-none">明文加密：
+Router(config)#int f0&#x2F;0
+Router(config-if)#ip ospf authentication-key class	
+md5加密：
+Router(config)#int f0&#x2F;0
+Router(config-if)#ip ospf message-digest-key 1 md5 class<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>配置<strong>console</strong>密码：</p>
-<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line console 0
-SW1(config-line)#password pswd
-SW1(config-line)#login &#x2F;&#x2F;启用密码认证，默认没有，需要加上去
-SW1(config-line)#login local &#x2F;&#x2F;本地开启用户认证
-SW1(config)username usname password pswd &#x2F;&#x2F;创建本地用户
-SW1(config)username usname privilege 15 password pswd &#x2F;&#x2F;以该用户登入设备后直接进入特权模式
-说明---对用户的权限定义0-15级，最高为15，任何命令都可操作
-SW1(config)service password-encryption &#x2F;&#x2F;明文密码加密<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3-配置路由器子接口-中继封装-地址/掩码配置</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#int f0&#x2F;0.1									&#x2F;&#x2F; 进入子接口
+Router(config-subif)#encapsulation dot1Q 1					&#x2F;&#x2F; 封装vlan 1允许通行
+Router(config-subif)#ip address 10.0.0.1 255.255.255.252	&#x2F;&#x2F; 配置IP地址子网掩码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p>配置<strong>特权模式</strong>密码：</p>
-<pre class="line-numbers language-none"><code class="language-none">Router(config)#enable password pswd		&#x2F;&#x2F; 设置密码为pswd
-Router(config)#enable secret pswd 		&#x2F;&#x2F; 同理 2个同时设，只有secret 有效，因为其优先极高<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p><strong>vty</strong>连接口令：</p>
-<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line vty 0 4
-SW1(config-line)#password telnetcisco
-SW1(config-line)#login &#x2F;&#x2F;默认就有
-SW1(config-line)#login local &#x2F;&#x2F;开启本地用户认证，使用本地用户数据库
-SW1(config-line)no login &#x2F;&#x2F;不需要密码就可登陆<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>4-环回接口地址配置</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#int loopback1
+Router(config-if)#ip address 10.0.1.1 255.255.255.252<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 
+
+<h4 id="6-访问控制列表的应用"><a href="#6-访问控制列表的应用" class="headerlink" title="6.访问控制列表的应用"></a>6.访问控制列表的应用</h4><p><img src="https://gitee.com/night7i/img/raw/master/img/20210627053032.png" alt="image-20210627053025136"></p>
+<p>​    1-定义标准ACL阻止特定流量，并应用到接口上</p>
+<pre class="line-numbers language-none"><code class="language-none">对 R1 和 R3 的 vty 线路配置标准命名 ACL，允许直接连接到其 FastEthernet 子网的主机获得 telnet 访问权。拒绝所有其它的连接尝试。将这些标准 ACL 命名为 VTY-Local。记录测试步骤。
+R1:
+R1(config)#ip access-list standard VTP-Local
+R1(config-std-nacl)#permit 10.1.1.0 0.0.0.255
+R1(config-std-nacl)#deny any
+R1(config-std-nacl)#line vty 0 4
+R1(config-line)#access-class VTP-Local in
+R3:
+R3(config)#ip access-list standard VTP-Local
+R3(config-std-nacl)#permit 10.3.1.0 0.0.0.255
+R3(config-std-nacl)#deny any
+R3(config-std-nacl)#line vty 0 4
+R3(config-line)#access-class VTP-Local in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    2-定义扩展ACL阻止特定流量，并应用到接口上</p>
+<pre class="line-numbers language-none"><code class="language-none">在 R2 上通过应用扩展 ACL 满足下列要求：
+
+将该 ACL 命名为 block
+
+阻止从连接到 R1 的子网发出的流量到达连接到 R3 的子网。
+阻止从连接到 R3 的子网发出的流量到达连接到 R1 的子网。
+允许所有其它流量。
+记录 ACL 配置。
+R2(config)#ip access-list extended block
+R2(config-ext-nacl)#deny ip 10.1.1.0 0.0.0.255 10.3.1.0 0.0.0.255
+R2(config-ext-nacl)#deny ip 10.3.1.0 0.0.0.255 10.1.1.0 0.0.0.255
+R2(config-ext-nacl)#permit ip any any
+R2(config-ext-nacl)#int s0&#x2F;0&#x2F;0
+R2(config)#ip access-list block in
+R2(config)#int s0&#x2F;0&#x2F;1
+R2(config-if)#ip access-group block in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#access-list 100 deny tcp host 10.1.1.1 host 10.1.2.1 eq 80
+Router(config)#access-list 100 permit ip any any
+Router(config)#int f0&#x2F;0
+Router(config-if)#ip access-group 100 in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h4 id="7-附加知识点"><a href="#7-附加知识点" class="headerlink" title="7.附加知识点"></a>7.附加知识点</h4><p><strong>禁用ospf更新</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">HQ(config)#router ospf 1
+HQ(config-router)#passive-interface f0&#x2F;0			&#x2F;&#x2F; 禁止 F0&#x2F;0接口更新
+HQ(config-router)#passive-interface loopback1		&#x2F;&#x2F; 禁止环回接口更新<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -1121,7 +1186,7 @@ SW1(config-line)no login &#x2F;&#x2F;不需要密码就可登陆<span aria-hidde
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3.9k</span>&nbsp;字
+                class="white-color">4.4k</span>&nbsp;字
             
             
             
