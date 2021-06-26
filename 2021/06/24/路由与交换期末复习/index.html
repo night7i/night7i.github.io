@@ -366,7 +366,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.1k
+                    1.2k
                 </div>
                 
 
@@ -426,9 +426,9 @@ Router(config-if)#clock rate 64000<span aria-hidden="true" class="line-numbers-r
 cisco(config-if)#switchport port-security							&#x2F;&#x2F; 打开端口安全模式<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>6-静态MAC地址绑定</p>
-<pre class="line-numbers language-none"><code class="language-none">sw1(config-if)#switchport port-security mac-address sticky		&#x2F;&#x2F;设置端口为静态MAC地址绑定
-sw1(config-if)#switchport port-security maximum 3				&#x2F;&#x2F;设置最大安全地址个数为3
-sw1(config-if)#switchport port-security violation shutdown		&#x2F;&#x2F;关闭非法端口连接
+<pre class="line-numbers language-none"><code class="language-none">sw1(config-if)#switchport port-security mac-address sticky		&#x2F;&#x2F; 设置端口为静态MAC地址绑定
+sw1(config-if)#switchport port-security maximum 3				&#x2F;&#x2F; 设置最大安全地址个数为3
+sw1(config-if)#switchport port-security violation shutdown		&#x2F;&#x2F; 关闭非法端口连接
 
 switchport port-security violation protect|restrict|shutdown
 &#x2F;&#x2F; 针对非法接入计算机，端口处理模式&#123;丢弃数据包，不发警告|丢弃数据包，在console发警告|关闭&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -457,9 +457,9 @@ SW1(config)#int vlan 20
 SW1(config-if)#ip address 10.0.2.1 255.255.255.252		&#x2F;&#x2F; 配置VLAN20 IP地址<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="5-路由协议和重分布"><a href="#5-路由协议和重分布" class="headerlink" title="5.路由协议和重分布"></a>5.路由协议和重分布</h4><p>​    1-默认路由，出接口 或 下一跳地址</p>
-<pre class="line-numbers language-none"><code class="language-none">SW1(config)#ip route 10.0.3.0 255.255.255.0 10.0.2.1	&#x2F;&#x2F;静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#ip route 10.0.3.0 255.255.255.0 10.0.2.1	&#x2F;&#x2F; 静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1
 
-SW2(config)#ip route 10.0.1.0 255.255.255.0 10.0.2.2	&#x2F;&#x2F;静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+SW2(config)#ip route 10.0.1.0 255.255.255.0 10.0.2.2	&#x2F;&#x2F; 静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>​    2-OSPF-进程ID-区域ID-RouterID-区域认证<br>​       RIP v2，启用或禁用自动汇总<br>​       路由重分布：OSPF-RIP-静态-默认路由<br>​       被动接口。</p>
 <pre class="line-numbers language-none"><code class="language-none">动态路由rip：
@@ -468,11 +468,13 @@ Router(config)#router rip
 Router(config-router)#version 2
 Router(config-router)#network 192.168.1.0		&#x2F;&#x2F; 添加直连的网段
 Router(config-router)#network 192.168.2.0
+Router(config-router)#no auto-summary			&#x2F;&#x2F; 禁用自动汇总
 SW2:
 Router(config)#router rip 
 Router(config-router)#version 2
 Router(config-router)#network 192.168.2.0		&#x2F;&#x2F; 添加直连的网段
 Router(config-router)#network 192.168.3.0
+Router(config-router)#no auto-summary			&#x2F;&#x2F; 禁用自动汇总
 
 动态路由ospf:
 SW1:
@@ -488,10 +490,15 @@ Router(config-router)#network 192.168.3.0 0.0.0.255 area 0
 SW1:
 Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.2
 SW2:
-Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
 <h4 id="6-访问控制列表的应用"><a href="#6-访问控制列表的应用" class="headerlink" title="6.访问控制列表的应用"></a>6.访问控制列表的应用</h4><p>​    1-定义标准ACL阻止特定流量，并应用到接口上<br>​    2-定义扩展ACL阻止特定流量，并应用到接口上<br>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
+<h4 id="7-附加知识点"><a href="#7-附加知识点" class="headerlink" title="7.附加知识点"></a>7.附加知识点</h4><p>配置<strong>当日消息</strong>标语：</p>
+<pre class="line-numbers language-none"><code class="language-none">banner motd &quot;当日信息标语&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
 
                 
             </div>
