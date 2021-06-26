@@ -87,17 +87,6 @@
   
   <li class="hide-on-med-and-down nav-item">
     
-    <a href="/contact" class="waves-effect waves-light">
-      
-      <i class="fas fa-comments" style="zoom: 0.6;"></i>
-      
-      <span>留言板</span>
-    </a>
-    
-  </li>
-  
-  <li class="hide-on-med-and-down nav-item">
-    
     <a href="/friends" class="waves-effect waves-light">
       
       <i class="menu-item-icon fas fa-heartbeat" style="zoom: 0.6;"></i>
@@ -173,17 +162,6 @@
 			    <i class="fa-fw fa-fw fas fa-align-left"></i>
 			
 			Others
-		</a>
-          
-        </li>
-        
-        <li class="m-nav-item">
-	  
-		<a href="/contact" class="waves-effect waves-light">
-			
-			    <i class="fa-fw fas fa-comments"></i>
-			
-			留言板
 		</a>
           
         </li>
@@ -388,14 +366,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    602
+                    1.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    5 分
                 </div>
                 
 
@@ -458,8 +436,61 @@ switchport port-security violation protect|restrict|shutdown
 
 
 <h4 id="3-密码和会话配置"><a href="#3-密码和会话配置" class="headerlink" title="3.密码和会话配置"></a>3.密码和会话配置</h4><p>​    1-密码配置：特权-控制台-虚拟终端线路<br>​    2-密码加密服务，线路会话超时-历史记录-线路密码应用<br>​    3-MOTD 和 端口描述</p>
-<h4 id="4-交换机配置"><a href="#4-交换机配置" class="headerlink" title="4.交换机配置"></a>4.交换机配置</h4><p>​    1-VLAN的创建-删除-命名-端口划分<br>​    2-配置接入 或 中继模式，允许指定VLAN<br>​    3-配置VTP模式-域名-VTP密码<br>​    4-启用三层路由功能-交换机三层端口配置-VLAN间路由。</p>
-<h4 id="5-路由协议和重分布"><a href="#5-路由协议和重分布" class="headerlink" title="5.路由协议和重分布"></a>5.路由协议和重分布</h4><p>​    1-默认路由，出接口 或 下一跳地址<br>​    2-OSPF-进程ID-区域ID-RouterID-区域认证<br>​       RIP v2，启用或禁用自动汇总<br>​       路由重分布：OSPF-RIP-静态-默认路由<br>​       被动接口。<br>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
+<h4 id="4-交换机配置"><a href="#4-交换机配置" class="headerlink" title="4.交换机配置"></a>4.交换机配置</h4><p><img src="https://gitee.com/night7i/img/raw/master/img/20210626181825.png" alt="Untitled"></p>
+<p>​    1-VLAN的创建-删除-命名-端口划分<br>​    2-配置接入 或 中继模式，允许指定VLAN<br>​    3-配置VTP模式-域名-VTP密码</p>
+<pre class="line-numbers language-none"><code class="language-none">教学楼三层交换机：
+SW1(vlan)#vtp domain vtp-name	&#x2F;&#x2F; 创建VTP域
+SW1(config)#vtp mode server		&#x2F;&#x2F; 设置VTP模式为server（服务端）
+SW1(vlan)#vtp password password	&#x2F;&#x2F; 设置VTP口令为password
+
+二层交换机 教学区&amp;实验区：
+SW2&amp;3(config)#int f0&#x2F;24
+SW2&amp;3(config-if)#switchport mode trunk			&#x2F;&#x2F; 配置与交换机连接的口为trunk
+SW2&amp;3(config)#vtp mode client					&#x2F;&#x2F; 设置VTP模式为Client（连接端）
+SW2&amp;3(vlan)#vtp password password	&#x2F;&#x2F; 设置VTP口令为password<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    4-启用三层路由功能-交换机三层端口配置-VLAN间路由。</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#ip routing				&#x2F;&#x2F; 开启三层路由
+SW1(config)#int vlan 10
+SW1(config-if)#ip address 10.0.1.1 255.255.255.252		&#x2F;&#x2F; 配置VLAN10 IP地址
+SW1(config)#int vlan 20
+SW1(config-if)#ip address 10.0.2.1 255.255.255.252		&#x2F;&#x2F; 配置VLAN20 IP地址<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="5-路由协议和重分布"><a href="#5-路由协议和重分布" class="headerlink" title="5.路由协议和重分布"></a>5.路由协议和重分布</h4><p>​    1-默认路由，出接口 或 下一跳地址</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#ip route 10.0.3.0 255.255.255.0 10.0.2.1	&#x2F;&#x2F;静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1
+
+SW2(config)#ip route 10.0.1.0 255.255.255.0 10.0.2.2	&#x2F;&#x2F;静态路由 声明访问10.0.3.0网段需要通过的下一个地址是10.0.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>​    2-OSPF-进程ID-区域ID-RouterID-区域认证<br>​       RIP v2，启用或禁用自动汇总<br>​       路由重分布：OSPF-RIP-静态-默认路由<br>​       被动接口。</p>
+<pre class="line-numbers language-none"><code class="language-none">动态路由rip：
+SW1:
+Router(config)#router rip 
+Router(config-router)#version 2
+Router(config-router)#network 192.168.1.0		&#x2F;&#x2F; 添加直连的网段
+Router(config-router)#network 192.168.2.0
+SW2:
+Router(config)#router rip 
+Router(config-router)#version 2
+Router(config-router)#network 192.168.2.0		&#x2F;&#x2F; 添加直连的网段
+Router(config-router)#network 192.168.3.0
+
+动态路由ospf:
+SW1:
+Router(config)#router ospf 1							&#x2F;&#x2F; 设置ospf路由 进程为1
+Router(config-router)#network 192.168.1.0 0.0.0.255 area 0	&#x2F;&#x2F; 添加直连网段并指定区域为 0
+Router(config-router)#network 192.168.2.0 0.0.0.255 area 0
+SW2:
+Router(config)#router ospf 1							&#x2F;&#x2F; 设置ospf路由 进程为1
+Router(config-router)#network 192.168.2.0 0.0.0.255 area 0	&#x2F;&#x2F; 添加直连网段并指定区域为 0
+Router(config-router)#network 192.168.3.0 0.0.0.255 area 0
+
+配置默认路由：
+SW1:
+Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.2
+SW2:
+Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
 <h4 id="6-访问控制列表的应用"><a href="#6-访问控制列表的应用" class="headerlink" title="6.访问控制列表的应用"></a>6.访问控制列表的应用</h4><p>​    1-定义标准ACL阻止特定流量，并应用到接口上<br>​    2-定义扩展ACL阻止特定流量，并应用到接口上<br>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
 
                 
@@ -560,6 +591,269 @@ switchport port-security violation protect|restrict|shutdown
     
 
     
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'JgpBjOfIseiiaNICv1lSoU70-gzGzoHsz',
+        appKey: 'GiM94MfxJbHfRqUuJb2qRCf5',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'just go go'
+    });
+</script>
+
+    
 
     
 
@@ -577,8 +871,7 @@ switchport port-security violation protect|restrict|shutdown
                 <a href="/2021/06/25/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/">
                     <div class="card-image">
                         
-                        
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="数据库安全技术期末考">
+                        <img src="https://gitee.com/night7i/img/raw/master/img/20210625134311.jpg" class="responsive-img" alt="数据库安全技术期末考">
                         
                         <span class="card-title">数据库安全技术期末考</span>
                     </div>
@@ -639,8 +932,12 @@ switchport port-security violation protect|restrict|shutdown
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            隐隐
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Web/" class="post-category">
+                                    Web
+                                </a>
+                            
                             
                         </span>
                     </div>
@@ -798,7 +1095,7 @@ switchport port-security violation protect|restrict|shutdown
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.6k</span>&nbsp;字
+                class="white-color">3.6k</span>&nbsp;字
             
             
             
