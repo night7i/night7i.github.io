@@ -366,14 +366,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    1.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    5 分
+                    6 分
                 </div>
                 
 
@@ -495,9 +495,28 @@ Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" clas
 <p>​    3-配置路由器子接口-中继封装-地址/掩码配置<br>​    4-环回接口地址配置</p>
 <h4 id="6-访问控制列表的应用"><a href="#6-访问控制列表的应用" class="headerlink" title="6.访问控制列表的应用"></a>6.访问控制列表的应用</h4><p>​    1-定义标准ACL阻止特定流量，并应用到接口上<br>​    2-定义扩展ACL阻止特定流量，并应用到接口上<br>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
 <h4 id="7-附加知识点"><a href="#7-附加知识点" class="headerlink" title="7.附加知识点"></a>7.附加知识点</h4><p>配置<strong>当日消息</strong>标语：</p>
-<pre class="line-numbers language-none"><code class="language-none">banner motd &quot;当日信息标语&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#banner motd &quot;当日信息标语&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
+<p>配置<strong>console</strong>密码：</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line console 0
+SW1(config-line)#password pswd
+SW1(config-line)#login &#x2F;&#x2F;启用密码认证，默认没有，需要加上去
+SW1(config-line)#login local &#x2F;&#x2F;本地开启用户认证
+SW1(config)username usname password pswd &#x2F;&#x2F;创建本地用户
+SW1(config)username usname privilege 15 password pswd &#x2F;&#x2F;以该用户登入设备后直接进入特权模式
+说明---对用户的权限定义0-15级，最高为15，任何命令都可操作
+SW1(config)service password-encryption &#x2F;&#x2F;明文密码加密<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<p>配置<strong>特权模式</strong>密码：</p>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#enable password pswd		&#x2F;&#x2F; 设置密码为pswd
+Router(config)#enable secret pswd 		&#x2F;&#x2F; 同理 2个同时设，只有secret 有效，因为其优先极高<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><strong>vty</strong>连接口令：</p>
+<pre class="line-numbers language-none"><code class="language-none">SW1(config)#line vty 0 4
+SW1(config-line)#password telnetcisco
+SW1(config-line)#login &#x2F;&#x2F;默认就有
+SW1(config-line)#login local &#x2F;&#x2F;开启本地用户认证，使用本地用户数据库
+SW1(config-line)no login &#x2F;&#x2F;不需要密码就可登陆<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
                 
@@ -1102,7 +1121,7 @@ Router(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1<span aria-hidden="true" clas
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3.6k</span>&nbsp;字
+                class="white-color">3.9k</span>&nbsp;字
             
             
             
