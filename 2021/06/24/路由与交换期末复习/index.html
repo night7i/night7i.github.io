@@ -366,14 +366,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2k
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    10 分
                 </div>
                 
 
@@ -542,17 +542,16 @@ Router(config-if)#ip address 10.0.1.1 255.255.255.252<span aria-hidden="true" cl
 <p>​    1-定义标准ACL阻止特定流量，并应用到接口上</p>
 <pre class="line-numbers language-none"><code class="language-none">对 R1 和 R3 的 vty 线路配置标准命名 ACL，允许直接连接到其 FastEthernet 子网的主机获得 telnet 访问权。拒绝所有其它的连接尝试。将这些标准 ACL 命名为 VTY-Local。记录测试步骤。
 R1:
-R1(config)#ip access-list standard VTP-Local
-R1(config-std-nacl)#permit 10.1.1.0 0.0.0.255
-R1(config-std-nacl)#deny any
-R1(config-std-nacl)#line vty 0 4
-R1(config-line)#access-class VTP-Local in
+R1(config)#ip access-list standard VTP-Local			&#x2F;&#x2F; 定义标准访问列表（standard） 名称为VTP-Local
+R1(config-std-nacl)#permit 10.1.1.0 0.0.0.255			&#x2F;&#x2F; 允许 10.1.1.0网段的IP通信
+R1(config-std-nacl)#line vty 0 4						&#x2F;&#x2F; 进入 vty线路 0 4
+R1(config-line)#access-class VTP-Local in				&#x2F;&#x2F; 设置标准访问列表进入时做检测
 R3:
 R3(config)#ip access-list standard VTP-Local
 R3(config-std-nacl)#permit 10.3.1.0 0.0.0.255
 R3(config-std-nacl)#deny any
 R3(config-std-nacl)#line vty 0 4
-R3(config-line)#access-class VTP-Local in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+R3(config-line)#access-class VTP-Local in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>​    2-定义扩展ACL阻止特定流量，并应用到接口上</p>
 <pre class="line-numbers language-none"><code class="language-none">在 R2 上通过应用扩展 ACL 满足下列要求：
@@ -563,20 +562,20 @@ R3(config-line)#access-class VTP-Local in<span aria-hidden="true" class="line-nu
 阻止从连接到 R3 的子网发出的流量到达连接到 R1 的子网。
 允许所有其它流量。
 记录 ACL 配置。
-R2(config)#ip access-list extended block
-R2(config-ext-nacl)#deny ip 10.1.1.0 0.0.0.255 10.3.1.0 0.0.0.255
+R2(config)#ip access-list extended block							&#x2F;&#x2F; 定义扩展访问列表（extended） 名称为block
+R2(config-ext-nacl)#deny ip 10.1.1.0 0.0.0.255 10.3.1.0 0.0.0.255	&#x2F;&#x2F; 拒绝（deny）IP段10.1.1.0访问IP端口10.3.1.0
 R2(config-ext-nacl)#deny ip 10.3.1.0 0.0.0.255 10.1.1.0 0.0.0.255
-R2(config-ext-nacl)#permit ip any any
-R2(config-ext-nacl)#int s0&#x2F;0&#x2F;0
-R2(config)#ip access-list block in
+R2(config-ext-nacl)#permit ip any any								&#x2F;&#x2F; 允许除上面拒绝（deny）外的所有IP通讯
+R2(config-ext-nacl)#int s0&#x2F;0&#x2F;0										&#x2F;&#x2F; 进入 s0&#x2F;0&#x2F;0 接口
+R2(config)#ip access-list block in									&#x2F;&#x2F; 设置扩展访问列表进入时做检测
 R2(config)#int s0&#x2F;0&#x2F;1
 R2(config-if)#ip access-group block in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>​    3-定义命名扩展ACL,允许或拒绝Web或DNS流量，并应用到接口上</p>
-<pre class="line-numbers language-none"><code class="language-none">Router(config)#access-list 100 deny tcp host 10.1.1.1 host 10.1.2.1 eq 80
-Router(config)#access-list 100 permit ip any any
-Router(config)#int f0&#x2F;0
-Router(config-if)#ip access-group 100 in<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">Router(config)#access-list 100 deny tcp host 10.1.1.1 host 10.1.2.1 eq 80		&#x2F;&#x2F; 定义扩展访问列表 序号为100 拒绝（deny） tcp协议的80端口 IP地址10.1.1.1对10.1.2.1的访问
+Router(config)#access-list 100 permit ip any any				&#x2F;&#x2F; 允许除上面拒绝外的所有IP通讯
+Router(config)#int f0&#x2F;0							&#x2F;&#x2F; 进入 F0&#x2F;0接口
+Router(config-if)#ip access-group 100 in		&#x2F;&#x2F; 设置扩展访问列表进入时做检测<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -1186,7 +1185,7 @@ HQ(config-router)#passive-interface loopback1		&#x2F;&#x2F; 禁止环回接口�
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.4k</span>&nbsp;字
+                class="white-color">4.6k</span>&nbsp;字
             
             
             
